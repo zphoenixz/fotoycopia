@@ -28,6 +28,7 @@ class _FotoyCopiaState extends State<FotoyCopia> {
         // primarySwatch: Colors.green,
         // accentColor: Colors.blue[50],
         // buttonColor: Colors.redAccent[100],
+        fontFamily: 'Cereal',
       ),
       //home: AuthPage(),// "/" esta reservada para la home page
       routes: {
