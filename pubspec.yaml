@@ -62,6 +62,8 @@ flutter:
       - asset: assets/fonts/AirbnbCereal-Light.ttf
       - asset: assets/fonts/AirbnbCereal-Medium.ttf
         style: italic
+        weight: 700
+        
     # - family: RobotoMono
     #   fonts:
     #     - asset: fonts/RobotoMono-Regular.ttf
