@@ -27,7 +27,7 @@ class _FotoyCopiaState extends State<FotoyCopia> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // brightness: Brightness.light,
-        canvasColor: Colors.orange[50],
+        canvasColor: Colors.yellow[50],
         // primarySwatch: Colors.green,
         // accentColor: Colors.blue[50],
         // buttonColor: Colors.redAccent[100],

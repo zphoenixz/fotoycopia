@@ -43,6 +43,7 @@ flutter:
     - assets/Icons/burger.png
     - assets/Icons/comidas.png
     - assets/Icons/male_user.png
+    - assets/Icons/libro_nube.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

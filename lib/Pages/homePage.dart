@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'blankPage.dart';
+import 'copies/dashboard.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,14 +11,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _active = false;
   int _activePage = 1;
 
   ScrollController _pageController;
 
   void initState() {
     super.initState();
-    _pageController = new PageController(initialPage: 1);
+    _pageController = new PageController(initialPage: 1,keepPage: true,);
   }
 
   @override
@@ -34,12 +34,17 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            CircleAvatar(
-              child: Image.asset(
-                "assets/Icons/male_user.png",
+            GestureDetector(
+              onTap: (){
+
+              },
+              child: CircleAvatar(
+                child: Image.asset(
+                  "assets/Icons/male_user.png",
+                ),
+                radius: screenHeight * 0.04,
+                backgroundColor: Colors.blueAccent[100],
               ),
-              radius: screenHeight * 0.04,
-              backgroundColor: Colors.blueAccent[100],
             ),
             Container(
               padding: new EdgeInsets.only(
@@ -48,7 +53,6 @@ class _HomePageState extends State<HomePage> {
               child: Text(
                 'Ramiro V.',
                 textAlign: TextAlign.justify,
-                
                 style: new TextStyle(
                   fontSize: screenHeight * 0.04,
                   color: Colors.amberAccent[700],
@@ -63,8 +67,8 @@ class _HomePageState extends State<HomePage> {
 
     void displacePage(int displacement) {
       _pageController.animateTo(
-        MediaQuery.of(context).size.width * displacement,
-        duration: new Duration(milliseconds: 1500),
+        screenWidth * displacement,
+        duration: new Duration(milliseconds: 1000),
         curve: Curves.fastOutSlowIn,
       );
     }
@@ -72,52 +76,51 @@ class _HomePageState extends State<HomePage> {
     Widget _buildNavIconButton() {
       return Container(
         child: Container(
-          alignment: FractionalOffset.topCenter,
+          alignment: FractionalOffset.topRight,
           padding: new EdgeInsets.only(
             top: screenHeight * 0.10,
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // FloatingActionButton(
-              //   elevation: 30.0,
-              //   mini: _activePage == 0 ? false : true,
-              //   onPressed: () {
-              //     setState(() {
-              //       // _activePage = 0;
-              //     });
-              //     displacePage(0);
-              //   },
-              //   backgroundColor: _activePage == 0 ? Colors.red[600] : Colors.lightBlue[50],
-              //   child: Icon(
-              //     Icons.settings,
-              //     color: _activePage == 0 ? Colors.white : Colors.black,
-              //   ),
-              // ),
+              FloatingActionButton(
+                elevation: _activePage == 0 ? 30.0 : 0.0,
+                mini: _activePage == 0 ? false : true,
+                onPressed: () {
+                  // setState(() {
+                  //   // _activePage = 0;
+                  // });
+                  displacePage(0);
+                },
+                backgroundColor: _activePage == 0 ? Colors.red[600] : Colors.lightBlue[50],
+                child: Image.asset("assets/Icons/libro_nube.png"),
+              ),
+              SizedBox(width: 20.0,),
               FloatingActionButton(
                 heroTag: 'submenu_center',
-                elevation: 30.0,
+                elevation: _activePage == 1 ? 30.0 : 0.0,
                 mini: _activePage == 1 ? false : true,
                 onPressed: () {
                   displacePage(1);
-                  setState(() {
-                    // _activePage = 1;
-                  });
+                  // setState(() {
+                  //   // _activePage = 1;
+                  // });
                 },
                 backgroundColor: _activePage == 1
                     ? Colors.yellow[600]
                     : Colors.lightBlue[50],
                 child: Image.asset("assets/Icons/plane.png"),
               ),
+              SizedBox(width: 20.0,),
               FloatingActionButton(
                 heroTag: 'submenu_right',
-                // elevation: 30.0,
+                elevation: _activePage == 2 ? 30.0 : 0.0,
                 mini: _activePage == 2 ? false : true,
                 onPressed: () {
                   displacePage(2);
-                  setState(() {
-                    // _activePage = 2;
-                  });
+                  // setState(() {
+                  //   // _activePage = 2;
+                  // });
                 },
                 backgroundColor:
                     _activePage == 2 ? Colors.green : Colors.lightBlue[50],
@@ -133,10 +136,14 @@ class _HomePageState extends State<HomePage> {
       return BlankPage(color);
     }
 
+    Widget _buildDashboardPage() {
+      return DashboardPage();
+    }
+
     Widget _buildPageView() {
       return Container(
         padding: new EdgeInsets.only(
-          top: screenHeight * 0.25,
+          top: screenHeight * 0.20,
         ),
         child: PageView(
           onPageChanged: (int value) {
@@ -148,10 +155,11 @@ class _HomePageState extends State<HomePage> {
           controller: _pageController,
           children: [
             _buildBlankPage(Colors.amber[50]),
-            _buildBlankPage(Colors.white),
+            _buildDashboardPage(),
             _buildBlankPage(Colors.yellow[50]),
           ],
         ),
+        
       );
     }
 

@@ -15,8 +15,13 @@ class _BlankPageState extends State<BlankPage> {
 
   _BlankPageState(this.color);
 
+  @override
   void initState() {
-
+    print("init blank");
+  }
+  @override
+  void dispose() {
+    print("dispose blank");
   }
 
   @override
