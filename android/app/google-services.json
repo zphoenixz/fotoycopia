@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1031400094181-jprrmk12l6k99i3aft3hh8m7mficnil9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fotoycopia",
+            "certificate_hash": "46d7543a3888a4c1be9f0c5ae29f2c9097e96762"
+          }
+        },
+        {
           "client_id": "1031400094181-j2kp38bqnejqb8pdj7rmjb0bncm8ff87.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,20 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1031400094181-j2kp38bqnejqb8pdj7rmjb0bncm8ff87.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1031400094181-a5kn8ho3s2lofkpevc759c95ge5lu1aa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fotoycopia"
+              }
+            }
+          ]
         },
         "ads_service": {
           "status": 2

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 
 // import '../globals.dart' as globals;
@@ -14,33 +16,136 @@ class _LoginPageState extends State<LoginPage> {
   String phoneNo;
   String smsCode;
   String verificationId;
-  Future<void> _verifyPhone() async {
+  bool verificar;
+  final _phoneFocusNode = FocusNode();
+  final _codeFocusNode = FocusNode();
+  var _phoneController = new TextEditingController();
+  var _codeController = new TextEditingController();
+
+  Future<void> verifyPhone() async {
+    final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
+      this.verificationId = verId;
+    };
+
+    final PhoneCodeSent smsCodeSent = (String verId, [int forceCodeResend]) {
+      this.verificationId = verId;
+    };
+
+    final PhoneVerificationCompleted verifiedSuccess = (FirebaseUser user) {
+      print('verified');
+    };
+
+    final PhoneVerificationFailed veriFailed = (AuthException exception) {
+      print('${exception.message}');
+    };
+
+    await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: "+591"+this.phoneNo,
+        codeAutoRetrievalTimeout: autoRetrieve,
+        codeSent: smsCodeSent,
+        timeout: const Duration(seconds: 5),
+        verificationCompleted: verifiedSuccess,
+        verificationFailed: veriFailed);
   }
+
+  _authCode() {
+    FirebaseAuth.instance.currentUser().then((user) {
+      if (user != null) {
+        Navigator.of(context).pushReplacementNamed('/prueba');
+      } else {
+        signIn();
+      }
+    });
+  }
+
+  Future<dynamic> signIn() {
+    return FirebaseAuth.instance
+        .signInWithPhoneNumber(verificationId: verificationId, smsCode: smsCode)
+        .then((user) {
+      Navigator.of(context).pushReplacementNamed('/prueba');
+    }).catchError((e) {
+      print(e);
+      return false;
+    });
+  }
+
+  @override
+  void initState() {
+    FirebaseAuth.instance.currentUser().then((user) {
+      if (user != null) {
+        Navigator.of(context).pushNamed('/prueba');
+      }
+    }).catchError((e) {
+      print(e);
+    });
+    verificar = false;
+    super.initState();
+  }
+
+  @override
   @override
   Widget build(BuildContext context) {
-    // double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return new Scaffold(
       body: new Center(
         child: Container(
             padding: EdgeInsets.all(25.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(hintText: 'Ingrese su número de teléfono'),
-                  onChanged: (value) {
-                    this.phoneNo = value;
-                  },
-                ),
+                SizedBox(height: 10.0),
+                _buildPhoneTextField(this.verificar),
+                SizedBox(height: 10.0),
+                verificar ? Container(child: _buildCodeTextField()) : Container(),
                 SizedBox(height: 10.0),
                 RaisedButton(
-                    onPressed: _verifyPhone,
-                    child: Text('Verificar')
-                )
-              ],
-            )),
+                  onPressed: () {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  verificar ? _authCode() : verifyPhone();
+                  verificar = true;
+                },
+                child: verificar ? Text('Verificar') : Text('Enviar codigo')),
+                verificar ? Container(
+                  child: RaisedButton(
+                  onPressed: () {Navigator.of(context).pushNamed('/');},
+                  child: Text('Cambiar número'))) : Container(),
+              ]
+            ),
+          ),
+        ),
+    );
+  }
+  Widget _buildPhoneTextField(bool verificar) {
+    return TextField(
+      focusNode: _phoneFocusNode,
+      enabled: !verificar,
+      controller: _phoneController,
+      decoration: InputDecoration(
+        labelText: 'Celular',
+        hintText: "Número de celular",
+        border: OutlineInputBorder(),
+        fillColor: Colors.white54,
+        filled: true,
       ),
+      onChanged: (String value) {
+        phoneNo = value;
+      },
+    );
+  }
+
+  Widget _buildCodeTextField() {
+    return TextField(
+      focusNode: _codeFocusNode,
+      controller: _codeController,
+      decoration: InputDecoration(
+        labelText: 'Código SMS',
+        hintText: "Ingrese su código",
+        border: OutlineInputBorder(),
+        fillColor: Colors.white54,
+        filled: true,
+      ),
+      onChanged: (String value) {
+        smsCode = value;
+      },
     );
   }
 }
