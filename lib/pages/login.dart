@@ -126,6 +126,7 @@ class _LoginPageState extends State<LoginPage> {
         fillColor: Colors.white54,
         filled: true,
       ),
+      keyboardType: TextInputType.number,
       onChanged: (String value) {
         phoneNo = value;
       },
@@ -136,6 +137,7 @@ class _LoginPageState extends State<LoginPage> {
     return TextField(
       focusNode: _codeFocusNode,
       controller: _codeController,
+      keyboardType: TextInputType.number,
       decoration: InputDecoration(
         labelText: 'Código SMS',
         hintText: "Ingrese su código",
