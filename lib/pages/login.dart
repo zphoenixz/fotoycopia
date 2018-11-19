@@ -33,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final PhoneVerificationCompleted verifiedSuccess = (FirebaseUser user) {
       print('verified');
+      Navigator.of(context).pushReplacementNamed('/prueba');
     };
 
     final PhoneVerificationFailed veriFailed = (AuthException exception) {
@@ -52,11 +53,14 @@ class _LoginPageState extends State<LoginPage> {
     FirebaseAuth.instance.currentUser().then((user) {
       if (user != null) {
         Navigator.of(context).pushReplacementNamed('/prueba');
+        print("Ya estoy adentro");
       } else {
         signIn();
       }
     });
   }
+
+  
 
   Future<dynamic> signIn() {
     return FirebaseAuth.instance
@@ -81,8 +85,6 @@ class _LoginPageState extends State<LoginPage> {
     verificar = false;
     super.initState();
   }
-
-  @override
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -99,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 10.0),
                 RaisedButton(
                   onPressed: () {
-                  FocusScope.of(context).requestFocus(new FocusNode());
+                  FocusScope.of(context).requestFocus(_codeFocusNode);
                   verificar ? _authCode() : verifyPhone();
                   verificar = true;
                 },
