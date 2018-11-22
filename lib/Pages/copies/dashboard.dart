@@ -3,7 +3,7 @@ import 'package:flutter/animation.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'dart:convert';
+import 'dart:convert';//Json convert
 import 'package:url_launcher/url_launcher.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -28,7 +28,6 @@ class _DashboardPageState extends State<DashboardPage>
   int index = 0;
   String backend = "https://fotoycopia-backend.herokuapp.com";
   List notTrahedData;
-  Future<void> _launched;
 
   @override
   bool get wantKeepAlive => true;
@@ -57,8 +56,7 @@ class _DashboardPageState extends State<DashboardPage>
 
   Future<String> _getAllNotTrashed() async {
     String finalUrl = backend + "/get_all_not_trashed";
-    var res = await http
-        .get(Uri.encodeFull(finalUrl), headers: {"Accept": "application/json"});
+    var res = await http.get(Uri.encodeFull(finalUrl), headers: {"Accept": "application/json"});
     print("==================");
     print(res);
     print("==================");
@@ -116,7 +114,7 @@ class _DashboardPageState extends State<DashboardPage>
           String toLaunch = webViewLink;
           print("tapped number: " + number.toString());
           setState(() {
-            _launched = _launchInWebViewWithJavaScript(toLaunch);
+            _launchInWebViewWithJavaScript(toLaunch);
           });
         },
         child: CircleAvatar(
