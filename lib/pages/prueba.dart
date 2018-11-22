@@ -1,19 +1,19 @@
- 
+
 import 'package:flutter/material.dart';
- 
+
 import 'package:firebase_auth/firebase_auth.dart';
- 
+
 class DashboardPage extends StatefulWidget {
   @override
   _DashboardPageState createState() => _DashboardPageState();
 }
- 
+
 class _DashboardPageState extends State<DashboardPage> {
   String uid = '';
   String name= '';
- 
+
   getUid() {}
- 
+
   @override
   void initState() {
     this.uid = '';
@@ -27,7 +27,7 @@ class _DashboardPageState extends State<DashboardPage> {
     });
     super.initState();
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
