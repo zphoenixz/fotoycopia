@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -52,8 +52,14 @@ class _DashboardPageState extends State<DashboardPage> {
                     }).catchError((e) {
                       print(e);
                     });
-                  },
+                  }, 
                 ),
+                StreamBuilder(stream: Firestore.instance.collection('usuarios').snapshots(),
+                builder: (context,snapshot){
+                  if(snapshot.hasData){
+                    return Text(snapshot.data.documents[0]['nombre']);
+                  }
+                },)
               ],
             ),
           ),
