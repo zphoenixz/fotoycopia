@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import './pages/login.dart';
 import './pages/prueba.dart';
+
+import './pages/homePage.dart';
+
 void main() {
   runApp(FotoyCopia());
 }
@@ -23,9 +26,10 @@ class _FotoyCopiaState extends State<FotoyCopia> {
     ]);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // brightness: Brightness.light,
-        // canvasColor: Colors.amberAccent[100],
+        canvasColor: Colors.yellow[50],
         // primarySwatch: Colors.green,
         // accentColor: Colors.blue[50],
         // buttonColor: Colors.redAccent[100],
@@ -35,6 +39,7 @@ class _FotoyCopiaState extends State<FotoyCopia> {
       routes: {
         '/': (BuildContext context) => new LoginPage(), //LOGIN
         '/prueba': (BuildContext context) => new DashboardPage(),
+        // '/': (BuildContext context) => new HomePage(), //LOGIN
         // '/logged': (BuildContext context) => new StartPage(), //HOME PAGE (Logged)
       },
       onUnknownRoute: (RouteSettings settings) {
