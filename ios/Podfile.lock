@@ -119,9 +119,9 @@ PODS:
     - nanopb/encode (= 0.3.901)
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
+  - Protobuf (3.6.1)
   - url_launcher (0.0.1):
     - Flutter
-  - Protobuf (3.6.1)
 
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
@@ -176,7 +176,6 @@ SPEC CHECKSUMS:
   FirebaseFirestore: 9e9411f13a0aba72d4f631899611d09e43734c48
   FirebaseInstanceID: e2fa4cb35ef5558c200f7f0ad8a53e212215f93e
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
-  url_launcher: 92b89c1029a0373879933c21642958c874539095
   GoogleAppMeasurement: 5029d78f2b438bd30ffb44e6c558b57c21622727
   GoogleUtilities: 95996bea7c7d9b8fb811b7507669a4a8762f80c7
   "gRPC-C++": 19eec1ffd34de29453f5fab5b4697ad0f240ad51
@@ -185,6 +184,7 @@ SPEC CHECKSUMS:
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
+  url_launcher: 92b89c1029a0373879933c21642958c874539095
 
 PODFILE CHECKSUM: aff02bfeed411c636180d6812254b2daeea14d09
 

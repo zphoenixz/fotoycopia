@@ -36,7 +36,7 @@ class _DashboardPageState extends State<DashboardPage> {
             child: new Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                new Text('You are now logged in as ${uid}, your phoneNumber is ${name}'),
+                new Text('You are now logged in as +' + uid + ', your phoneNumber is ' + name + 'ß}'),
                 SizedBox(
                   height: 15.0,
                 ),

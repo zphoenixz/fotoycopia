@@ -17,17 +17,19 @@ class _BlankPageState extends State<BlankPage> {
 
   @override
   void initState() {
+    super.initState();
     print("init blank");
   }
   @override
   void dispose() {
+    super.dispose();
     print("dispose blank");
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
+    // double screenHeight = MediaQuery.of(context).size.height;
+    // double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
       color: color,

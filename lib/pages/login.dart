@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
   _authCode() {
     FirebaseAuth.instance.currentUser().then((user) {
       if (user != null) {
-        Navigator.of(context).pushReplacementNamed('/prueba');
+        Navigator.of(context).pushReplacementNamed('/home');
         print("Ya estoy adentro");
       } else {
         signIn();
@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
     return FirebaseAuth.instance
         .signInWithPhoneNumber(verificationId: verificationId, smsCode: smsCode)
         .then((user) {
-      Navigator.of(context).pushReplacementNamed('/prueba');
+      Navigator.of(context).pushReplacementNamed('/home');
     }).catchError((e) {
       print(e);
       return false;
@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     FirebaseAuth.instance.currentUser().then((user) {
       if (user != null) {
-        Navigator.of(context).pushNamed('/prueba');
+        Navigator.of(context).pushNamed('/home');
       }
     }).catchError((e) {
       print(e);

@@ -39,7 +39,7 @@ class _FotoyCopiaState extends State<FotoyCopia> {
       routes: {
         '/': (BuildContext context) => new LoginPage(), //LOGIN
         '/prueba': (BuildContext context) => new DashboardPage(),
-        // '/': (BuildContext context) => new HomePage(), //LOGIN
+        '/home': (BuildContext context) => new HomePage(), //HomePage
         // '/logged': (BuildContext context) => new StartPage(), //HOME PAGE (Logged)
       },
       onUnknownRoute: (RouteSettings settings) {
