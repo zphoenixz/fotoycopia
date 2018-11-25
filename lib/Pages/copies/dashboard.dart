@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
+import 'dart:math' as math;
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'dart:convert';//Json convert
+import 'dart:convert'; //Json convert
 import 'package:url_launcher/url_launcher.dart';
+// import 'package:intl/intl.dart';
 
 class DashboardPage extends StatefulWidget {
   // final Color color;
@@ -56,16 +58,18 @@ class _DashboardPageState extends State<DashboardPage>
 
   Future<String> _getAllNotTrashed() async {
     String finalUrl = backend + "/get_all_not_trashed";
-    var res = await http.get(Uri.encodeFull(finalUrl), headers: {"Accept": "application/json"});
+    var res = await http
+        .get(Uri.encodeFull(finalUrl), headers: {"Accept": "application/json"});
     print("==================");
     print(res);
     print("==================");
     setState(() {
       notTrahedData = json.decode(res.body);
+      notTrahedData
+          .sort((b, a) => a['createdTime'].compareTo(b['createdTime']));
       print(notTrahedData);
       print(notTrahedData[1]);
     });
-    print("==================");
 
     return "Success!";
   }
@@ -86,10 +90,9 @@ class _DashboardPageState extends State<DashboardPage>
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    // double screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     List<Widget> items = new List();
-    
 
     void changeIndex() {
       setState(() => index = random.nextInt(3));
@@ -108,35 +111,81 @@ class _DashboardPageState extends State<DashboardPage>
       );
     }
 
-    Widget _item(int index, int number, String webViewLink) {
+    Widget _item(int index, int number, Map fileData) {
+      String mimeType = fileData['mimeType'];
+      String fileExtension = (mimeType.contains('word')
+          ? 'word'
+          : mimeType.contains('pdf')
+              ? 'pdf'
+              : mimeType.contains('powerpoint')
+                  ? 'powerpoint'
+                  : mimeType.contains('image')
+                      ? 'img'
+                      : (mimeType.contains('sheet') ||
+                              mimeType.contains('excel'))
+                          ? 'excel'
+                          : 'unknow');
+
+      String fileImage = "assets/Icons/file_icons/" + fileExtension + '.png';
+      int itemsPerRow = 4;
+      double radio = screenWidth * (0.9 / 2) / itemsPerRow;
+      String itemTitle = fileData['name'].split('.')[0].toLowerCase();
+
       return GestureDetector(
         onTap: () {
-          String toLaunch = webViewLink;
+          String toLaunch = fileData['webViewLink'];
           print("tapped number: " + number.toString());
           setState(() {
             _launchInWebViewWithJavaScript(toLaunch);
           });
         },
-        child: CircleAvatar(
-          // child: Image.asset(
-          //   "assets/Icons/male_user.png",
-          // ),
-          radius: screenHeight * 0.06,
-          backgroundColor: colors[index],
+        child: Container(
+          child: Stack(
+            children: <Widget>[
+              CircleAvatar(
+                child: Container(
+                  // padding: new EdgeInsets.only(top: radio * 1.6),
+                  child: DecoratedBox(
+                    // position: DecorationPosition.background,
+                    child: Text(
+                      itemTitle,
+                      textAlign: TextAlign.end,
+                      style: new TextStyle(
+                        fontSize: radio * 2 * 0.25 * 0.5, //50%
+                        color: Colors.black87,
+                        // fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.yellow[50],
+                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                    ),
+                  ),
+                ),
+                radius: radio,
+                backgroundColor: Colors.brown[300],
+              ),
+              Container(
+                padding: new EdgeInsets.only(top: radio, left: radio),
+                child: Image.asset(
+                  fileImage,
+                  height: radio * 2 * 0.5, //Diametro = 2 * radio, 1.5 = 75 %
+                ),
+              )
+            ],
+          ),
         ),
       );
     }
 
     void _cloudItems() {
-      
       for (int i = 0; i < notTrahedData.length; i++) {
         changeIndex();
-        print(notTrahedData[i]['name'] + " - " + notTrahedData[i]['webViewLink']);
+        print(
+            notTrahedData[i]['name'] + " - " + notTrahedData[i]['webViewLink']);
         setState(() {
-          items.add(_item(index, i, notTrahedData[i]['webViewLink']));
+          items.add(_item(index, i, notTrahedData[i]));
         });
-
-        // items.add(SizedBox(width:screenWidth * 0.05));
       }
     }
     // Este widget luego escuchara a la bd en FIRESTORE y no la de python
@@ -154,12 +203,14 @@ class _DashboardPageState extends State<DashboardPage>
     Widget _buildCloudItems() {
       _cloudItems();
       return Container(
-        padding: new EdgeInsets.only(top: 10.0, left: 10.0),
+        padding: new EdgeInsets.only(
+            top: screenWidth * 0.02, left: screenWidth * 0.02),
         child: SingleChildScrollView(
           child: Wrap(
-            runSpacing: 20.0,
-            spacing: 10.0,
-            crossAxisAlignment: WrapCrossAlignment.end,
+            runSpacing: 15.0,
+            spacing: screenWidth * 0.01,
+            // runAlignment: WrapAlignment.spaceBetween,
+            // crossAxisAlignment: WrapCrossAlignment.start,
             direction: Axis.horizontal,
             children: items,
           ),
@@ -167,13 +218,25 @@ class _DashboardPageState extends State<DashboardPage>
       );
     }
 
-    return Container(
-      margin: EdgeInsets.all(10.0),
-      color: Colors.transparent,
-      child: Container(
-        decoration: _buildDecoratedAnimation(),
-        child: _buildCloudItems(),
-      ),
-    );
+    double scale = 1.0;
+    return GestureDetector(
+        onScaleUpdate: (ScaleUpdateDetails scaleDetails) {
+          print('---------------');
+          print(scaleDetails.scale);
+          scale = scaleDetails.scale;
+          print('---------------');
+          setState(() {});
+        },
+        child: Container(
+            margin: EdgeInsets.all(screenWidth * 0.02),
+            color: Colors.transparent,
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  decoration: _buildDecoratedAnimation(),
+                  child: _buildCloudItems(),
+                ),
+              ],
+            )));
   }
 }
