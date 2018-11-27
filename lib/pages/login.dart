@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final PhoneVerificationCompleted verifiedSuccess = (FirebaseUser user) {
       print('verified');
-      Navigator.of(context).pushReplacementNamed('/prueba');
+      Navigator.of(context).pushReplacementNamed('/home');
     };
 
     final PhoneVerificationFailed veriFailed = (AuthException exception) {
