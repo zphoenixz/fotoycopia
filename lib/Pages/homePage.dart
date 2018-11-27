@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'blankPage.dart';
 import 'copies/dashboard.dart';
 
@@ -36,7 +36,13 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             GestureDetector(
               onTap: (){
-
+                FirebaseAuth.instance.signOut().then((action) {
+                      Navigator
+                          .of(context)
+                          .pushReplacementNamed('/');
+                    }).catchError((e) {
+                      print(e);
+                    });
               },
               child: CircleAvatar(
                 child: Image.asset(
