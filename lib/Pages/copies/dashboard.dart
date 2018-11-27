@@ -5,10 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert'; //Json convert
 import 'package:url_launcher/url_launcher.dart';
-import 'package:documents_picker/documents_picker.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'dart:io';
+import '../../storageFunctions.dart';
 
 class DashboardPage extends StatefulWidget {
   // final Color color;
@@ -32,48 +29,9 @@ class _DashboardPageState extends State<DashboardPage>
   int index = 0;
   String backend = "https://fotoycopia-backend.herokuapp.com";
   List notTrahedData;
-  String path = '';
-  String linkd = '';
-
-  Future _getImageFromGallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      this.path = image.path;
-    });
-  }
-
-  Future<Null> _uploadFile(String path) async {
-    String name=path.substring(path.lastIndexOf('/'));
-    final StorageReference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child('UCB'+name);
-    File a = new File(path);
-    final StorageUploadTask task = firebaseStorageRef.putFile(a);
-    String dowload = await firebaseStorageRef.getDownloadURL();
-    print(dowload);
-    setState(() {
-      linkd=dowload;
-    });
-    path='vacio';
-  }
-
-  Future _getImageFromCamera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    setState(() {
-      this.path = image.path;
-    });
-  }
-
-  Future _getDocument() async {
-    var docPaths = await DocumentsPicker.pickDocuments;
-    if (!mounted) return;
-    setState(() {
-      this.path = docPaths.single;
-    });
-  }
-
+  var storage=new StorageClass();
   @override
   bool get wantKeepAlive => true;
-
   @override
   void initState() {
     super.initState();
@@ -221,26 +179,26 @@ class _DashboardPageState extends State<DashboardPage>
             Row(
               children: <Widget>[
                 FloatingActionButton(
-                  onPressed: () => _getDocument(),
+                  onPressed: () => storage.getDocument(),
                   child: Icon(Icons.book),
                 ),
                 FloatingActionButton(
-                  onPressed: () => _getImageFromGallery(),
+                  onPressed: () => storage.getImageFromGallery(),
                   child: Icon(Icons.image),
                 ),
                 FloatingActionButton(
-                  onPressed: () => _getImageFromCamera(),
+                  onPressed: () => storage.getImageFromCamera(),
                   child: Icon(Icons.add_a_photo),
                 ),
                 FloatingActionButton(
-                  onPressed: () => _uploadFile(this.path),
+                  onPressed: (){
+                    storage.uploadFile();
+                    print(storage.download);
+                  },
                   child: Icon(Icons.save),
                 )
               ],
             ),
-            Text(path),
-            Container(height: 5,),
-            Text(linkd),
           ],
         ));
   }
