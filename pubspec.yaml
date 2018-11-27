@@ -58,6 +58,9 @@ flutter:
     - assets/Icons/file_icons/word.png
     - assets/Icons/file_icons/unknow.png
 
+    - assets/Icons/app_bar_icons/zoom_in.png
+    - assets/Icons/app_bar_icons/zoom_out.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
 

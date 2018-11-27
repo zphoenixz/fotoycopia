@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
     Widget _buildPageView() {
       return Container(
         padding: new EdgeInsets.only(
-          top: screenHeight * 0.20,
+          top: screenHeight * 0.17,
         ),
         child: PageView(
           onPageChanged: (int value) {

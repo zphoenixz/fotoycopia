@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
-import 'dart:math' as math;
-import 'dart:math';
+// import 'dart:math' as math;
+// import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert'; //Json convert
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DashboardPage extends StatefulWidget {
   // final Color color;
@@ -26,16 +27,20 @@ class _DashboardPageState extends State<DashboardPage>
   AnimationController controller;
 
   List colors = [Colors.red, Colors.green, Colors.yellow];
-  Random random = new Random();
-  int index = 0;
+  // Random random = new Random();
+  // int index = 0;
   String backend = "https://fotoycopia-backend.herokuapp.com";
   List notTrahedData;
 
   @override
   bool get wantKeepAlive => true;
-
+  double itemsPerRow;
   @override
   void initState() {
+    setState(() {
+      itemsPerRow = 4.0;
+    });
+
     super.initState();
     this._getAllNotTrashed();
     controller = new AnimationController(
@@ -60,17 +65,11 @@ class _DashboardPageState extends State<DashboardPage>
     String finalUrl = backend + "/get_all_not_trashed";
     var res = await http
         .get(Uri.encodeFull(finalUrl), headers: {"Accept": "application/json"});
-    print("==================");
-    print(res);
-    print("==================");
     setState(() {
       notTrahedData = json.decode(res.body);
       notTrahedData
           .sort((b, a) => a['createdTime'].compareTo(b['createdTime']));
-      print(notTrahedData);
-      print(notTrahedData[1]);
     });
-
     return "Success!";
   }
 
@@ -91,19 +90,20 @@ class _DashboardPageState extends State<DashboardPage>
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+    double radio = screenWidth * (0.87 / 2) / itemsPerRow;
+    double margenExterno = screenWidth * 0.04;
+    double spacing = (screenWidth - margenExterno - (radio * 2 * itemsPerRow)) /
+        (itemsPerRow);
+    double margenInterno = spacing / 2;
 
     List<Widget> items = new List();
-
-    void changeIndex() {
-      setState(() => index = random.nextInt(3));
-    }
 
     BoxDecoration _buildDecoratedAnimation() {
       return BoxDecoration(
         color: Colors.amber[200],
         borderRadius: BorderRadius.all(
           Radius.lerp(
-            Radius.circular(25.0),
+            Radius.circular(38.0),
             Radius.circular(70.0),
             animation.value,
           ),
@@ -111,7 +111,7 @@ class _DashboardPageState extends State<DashboardPage>
       );
     }
 
-    Widget _item(int index, int number, Map fileData) {
+    Widget _item(int number, Map fileData) {
       String mimeType = fileData['mimeType'];
       String fileExtension = (mimeType.contains('word')
           ? 'word'
@@ -127,14 +127,13 @@ class _DashboardPageState extends State<DashboardPage>
                           : 'unknow');
 
       String fileImage = "assets/Icons/file_icons/" + fileExtension + '.png';
-      int itemsPerRow = 4;
-      double radio = screenWidth * (0.9 / 2) / itemsPerRow;
-      String itemTitle = fileData['name'].split('.')[0].toLowerCase();
+
+      String itemTitle = fileData['fileName'].split('.')[0].toLowerCase();
 
       return GestureDetector(
         onTap: () {
-          String toLaunch = fileData['webViewLink'];
-          print("tapped number: " + number.toString());
+          String toLaunch =
+              'https://drive.google.com/file/d/' + fileData['fileId'] + '/view?usp=drivesdk';
           setState(() {
             _launchInWebViewWithJavaScript(toLaunch);
           });
@@ -144,9 +143,7 @@ class _DashboardPageState extends State<DashboardPage>
             children: <Widget>[
               CircleAvatar(
                 child: Container(
-                  // padding: new EdgeInsets.only(top: radio * 1.6),
                   child: DecoratedBox(
-                    // position: DecorationPosition.background,
                     child: Text(
                       itemTitle,
                       textAlign: TextAlign.end,
@@ -178,39 +175,16 @@ class _DashboardPageState extends State<DashboardPage>
       );
     }
 
-    void _cloudItems() {
-      for (int i = 0; i < notTrahedData.length; i++) {
-        changeIndex();
-        print(
-            notTrahedData[i]['name'] + " - " + notTrahedData[i]['webViewLink']);
-        setState(() {
-          items.add(_item(index, i, notTrahedData[i]));
-        });
-      }
-    }
-    // Este widget luego escuchara a la bd en FIRESTORE y no la de python
-    // Widget _buildArrayData(){
-
-    //   return StreamBuilder(
-    //     stream: ,
-    //     builder: (){
-
-    //       return widget;
-    //     },
-    //   )
-    // }
-
     Widget _buildCloudItems() {
-      _cloudItems();
       return Container(
-        padding: new EdgeInsets.only(
-            top: screenWidth * 0.02, left: screenWidth * 0.02),
+        width: screenWidth,
+        height: screenHeight * 0.82,
+        padding:
+            new EdgeInsets.only(top: screenWidth * 0.02, left: margenInterno),
         child: SingleChildScrollView(
           child: Wrap(
             runSpacing: 15.0,
-            spacing: screenWidth * 0.01,
-            // runAlignment: WrapAlignment.spaceBetween,
-            // crossAxisAlignment: WrapCrossAlignment.start,
+            spacing: spacing,
             direction: Axis.horizontal,
             children: items,
           ),
@@ -218,25 +192,81 @@ class _DashboardPageState extends State<DashboardPage>
       );
     }
 
-    double scale = 1.0;
-    return GestureDetector(
-        onScaleUpdate: (ScaleUpdateDetails scaleDetails) {
-          print('---------------');
-          print(scaleDetails.scale);
-          scale = scaleDetails.scale;
-          print('---------------');
-          setState(() {});
+    Widget _buildDocsListView() {
+      return StreamBuilder(
+        stream: Firestore.instance
+            .collection('documents-ucb')
+            .orderBy('createdTime', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData)
+            return const Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.red,
+              ),
+            );
+          if (snapshot.hasError)
+            print("el error es::::: " + snapshot.error.toString());
+          items.clear();
+          for (int i = 0; i < snapshot.data.documents.length; i++) {
+            var data = snapshot.data.documents;
+            Map<dynamic, dynamic> item = {
+              'mimeType': data[i]['mimeType'],
+              'fileName': data[i]['fileName'],
+              'isVisible': data[i]['isVisible'],
+              'createdTime': data[i]['createdTime'],
+              'fileId': data[i].documentID.trim(),
+            };
+            items.add(_item(i, item));
+            // print('->'+data[i].documentID.trim()+'<-');
+          }
+          return _buildCloudItems();
         },
-        child: Container(
-            margin: EdgeInsets.all(screenWidth * 0.02),
-            color: Colors.transparent,
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  decoration: _buildDecoratedAnimation(),
-                  child: _buildCloudItems(),
-                ),
-              ],
-            )));
+      );
+    }
+
+    Widget _buildZoomInOutButtons(int inOrOut) {
+      return Container(
+        margin: EdgeInsets.only(
+            top: screenHeight * 0.0,
+            left: inOrOut == 1 ? 0.0 : screenWidth * 0.08),
+        child: GestureDetector(
+          child: Image.asset(
+            inOrOut == 1
+                ? "assets/Icons/app_bar_icons/zoom_in.png"
+                : "assets/Icons/app_bar_icons/zoom_out.png",
+            height: screenHeight * 0.03,
+            color: itemsPerRow == 2 && inOrOut == -1
+                ? Colors.red
+                : itemsPerRow == 10 && inOrOut == 1 ? Colors.red : null,
+          ),
+          onTap: () {
+            setState(() {
+              if (itemsPerRow > 2 && inOrOut == -1) {
+                itemsPerRow = itemsPerRow + inOrOut;
+              } else if (itemsPerRow < 10 && inOrOut == 1) {
+                itemsPerRow = itemsPerRow + inOrOut;
+              }
+            });
+          },
+        ),
+      );
+    }
+
+    return Container(
+      margin: EdgeInsets.all(margenExterno / 2),
+      color: Colors.transparent,
+      child: Stack(
+        children: <Widget>[
+          _buildZoomInOutButtons(1),
+          _buildZoomInOutButtons(-1),
+          Container(
+            margin: EdgeInsets.only(top: screenHeight * 0.04),
+            decoration: _buildDecoratedAnimation(),
+            child: _buildDocsListView(),
+          ),
+        ],
+      ),
+    );
   }
 }

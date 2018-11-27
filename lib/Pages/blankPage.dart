@@ -28,10 +28,11 @@ class _BlankPageState extends State<BlankPage> {
 
   @override
   Widget build(BuildContext context) {
-    // double screenHeight = MediaQuery.of(context).size.height;
+    double screenHeight = MediaQuery.of(context).size.height;
     // double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
+      margin: EdgeInsets.only(top: screenHeight * 0.15 ),
       color: color,
       // child: pageContent,
     );
