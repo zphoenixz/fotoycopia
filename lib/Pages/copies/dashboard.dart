@@ -8,6 +8,7 @@ import 'dart:convert'; //Json convert
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../storageFunctions.dart';
 
 class DashboardPage extends StatefulWidget {
   // final Color color;
@@ -31,7 +32,7 @@ class _DashboardPageState extends State<DashboardPage>
   // int index = 0;
   String backend = "https://fotoycopia-backend.herokuapp.com";
   List notTrahedData;
-
+  var storage=new StorageClass();
   @override
   bool get wantKeepAlive => true;
   double itemsPerRow;
