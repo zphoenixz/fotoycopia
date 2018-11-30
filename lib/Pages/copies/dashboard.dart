@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
-// Yo soy la prueba
-// import 'dart:math';
+
+import 'dart:math' as math;
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert'; //Json convert
@@ -25,17 +25,18 @@ class _DashboardPageState extends State<DashboardPage>
         SingleTickerProviderStateMixin,
         AutomaticKeepAliveClientMixin<DashboardPage> {
   Animation<double> animation;
-  AnimationController controller;
+  AnimationController _controller;
 
   List colors = [Colors.red, Colors.green, Colors.yellow];
   // Random random = new Random();
   // int index = 0;
   String backend = "https://fotoycopia-backend.herokuapp.com";
   List notTrahedData;
-  var storage=new StorageClass();
+  var storage = new StorageClass();
   @override
   bool get wantKeepAlive => true;
   double itemsPerRow;
+
   @override
   void initState() {
     setState(() {
@@ -44,23 +45,18 @@ class _DashboardPageState extends State<DashboardPage>
 
     super.initState();
     this._getAllNotTrashed();
-    controller = new AnimationController(
-        duration: new Duration(milliseconds: 600), vsync: this);
-    animation =
-        new CurvedAnimation(parent: controller, curve: Curves.elasticInOut)
-          ..addListener(() => this.setState(() {}))
-          ..addStatusListener((AnimationStatus status) {});
 
-    controller.forward().whenComplete(() {
-      controller.reverse();
-    });
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+    );
   }
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _controller.dispose();
+  //   super.dispose();
+  // }
 
   Future<String> _getAllNotTrashed() async {
     String finalUrl = backend + "/get_all_not_trashed";
@@ -103,11 +99,7 @@ class _DashboardPageState extends State<DashboardPage>
       return BoxDecoration(
         color: Colors.amber[200],
         borderRadius: BorderRadius.all(
-          Radius.lerp(
-            Radius.circular(38.0),
-            Radius.circular(70.0),
-            animation.value,
-          ),
+          Radius.circular(38.0),
         ),
       );
     }
@@ -133,8 +125,9 @@ class _DashboardPageState extends State<DashboardPage>
 
       return GestureDetector(
         onTap: () {
-          String toLaunch =
-              'https://drive.google.com/file/d/' + fileData['fileId'] + '/view?usp=drivesdk';
+          String toLaunch = 'https://drive.google.com/file/d/' +
+              fileData['fileId'] +
+              '/view?usp=drivesdk';
           setState(() {
             _launchInWebViewWithJavaScript(toLaunch);
           });
@@ -254,6 +247,80 @@ class _DashboardPageState extends State<DashboardPage>
       );
     }
 
+    Widget _buildUploadGruopButton() {
+      return Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 70.0,
+              width: 56.0,
+              alignment: FractionalOffset.topCenter,
+              child: ScaleTransition(
+                scale: CurvedAnimation(
+                    parent: _controller,
+                    curve: Interval(0.0, 1.0, curve: Curves.easeOut)),
+                child: FloatingActionButton(
+                  backgroundColor: Theme.of(context).cardColor,
+                  heroTag: 'contact',
+                  mini: true,
+                  onPressed: () async {},
+                  child: Icon(
+                    Icons.mail,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: 70.0,
+              width: 56.0,
+              alignment: FractionalOffset.topCenter,
+              child: ScaleTransition(
+                scale: CurvedAnimation(
+                  parent: _controller,
+                  curve: Interval(0.0, 0.5, curve: Curves.easeOut),
+                ),
+                child: FloatingActionButton(
+                  backgroundColor: Theme.of(context).cardColor,
+                  heroTag: 'favorite',
+                  mini: true,
+                  onPressed: () {},
+                  child: Icon(
+                    Icons.favorite_border,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            ),
+            FloatingActionButton(
+              heroTag: 'options',
+              onPressed: () {
+                if (_controller.isDismissed) {
+                  _controller.forward();
+                } else {
+                  _controller.reverse();
+                }
+              },
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (BuildContext context, Widget child) {
+                  return Transform(
+                    alignment: FractionalOffset.center,
+                    transform:
+                        Matrix4.rotationZ(_controller.value * 0.5 * math.pi),
+                    child: Icon(_controller.isDismissed
+                        ? Icons.more_vert
+                        : Icons.close),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       margin: EdgeInsets.all(margenExterno / 2),
       color: Colors.transparent,
@@ -266,6 +333,7 @@ class _DashboardPageState extends State<DashboardPage>
             decoration: _buildDecoratedAnimation(),
             child: _buildDocsListView(),
           ),
+          _buildUploadGruopButton()
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import './pages/login.dart';
-import './pages/prueba.dart';
+import './pages/login/login.dart';
+// import './pages/prueba.dart';
 
 import './pages/homePage.dart';
 
@@ -38,7 +38,7 @@ class _FotoyCopiaState extends State<FotoyCopia> {
       //home: AuthPage(),// "/" esta reservada para la home page
       routes: {
         '/': (BuildContext context) => new LoginPage(), //LOGIN
-        '/prueba': (BuildContext context) => new DashboardPage(),
+        // '/prueba': (BuildContext context) => new DashboardPage(),
         '/home': (BuildContext context) => new HomePage(), //HomePage
         // '/logged': (BuildContext context) => new StartPage(), //HOME PAGE (Logged)
       },
