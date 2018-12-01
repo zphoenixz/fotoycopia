@@ -13,6 +13,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String prueba;
   String phoneNo;
   String smsCode;
   String verificationId;
