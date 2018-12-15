@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'blankPage.dart';
 import 'copies/dashboard.dart';
+import 'package:quick_actions/quick_actions.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,6 +19,17 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _pageController = new PageController(initialPage: 1,keepPage: true,);
+    final QuickActions quickActions = const QuickActions();
+    quickActions.initialize((String shortcutType) {
+      if (shortcutType == 'action_main') {
+        print('The user tapped on the "Main view" action.');
+      }
+    });
+
+    quickActions.setShortcutItems(<ShortcutItem>[
+      const ShortcutItem(
+          type: 'action_main', localizedTitle: 'Main view', icon: 'AppIcon'),
+]);
   }
 
   @override
