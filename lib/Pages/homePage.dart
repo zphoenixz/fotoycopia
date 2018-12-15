@@ -12,17 +12,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _activePage = 1;
-
-  ScrollController _pageController;
+  String title = 'Ramiro V.';
 
   void initState() {
     super.initState();
-    _pageController = new PageController(initialPage: 1,keepPage: true,);
+
     final QuickActions quickActions = const QuickActions();
-    quickActions.initialize((String shortcutType) {
+    quickActions.initialize((shortcutType) {
       if (shortcutType == 'action_main') {
-        print('The user tapped on the "Main view" action.');
+        Navigator.pushNamed(context, '/PageTwo');
       }
     });
 
@@ -47,14 +45,12 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 FirebaseAuth.instance.signOut().then((action) {
-                      Navigator
-                          .of(context)
-                          .pushReplacementNamed('/');
-                    }).catchError((e) {
-                      print(e);
-                    });
+                  Navigator.of(context).pushReplacementNamed('/');
+                }).catchError((e) {
+                  print(e);
+                });
               },
               child: CircleAvatar(
                 child: Image.asset(
@@ -69,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                 left: screenWidth * 0.05,
               ),
               child: Text(
-                'Ramiro V.',
+                title,
                 textAlign: TextAlign.justify,
                 style: new TextStyle(
                   fontSize: screenHeight * 0.04,
@@ -83,68 +79,12 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    void displacePage(int displacement) {
-      _pageController.animateTo(
-        screenWidth * displacement,
-        duration: new Duration(milliseconds: 1000),
-        curve: Curves.fastOutSlowIn,
-      );
-    }
-
     Widget _buildNavIconButton() {
       return Container(
         child: Container(
           alignment: FractionalOffset.topRight,
           padding: new EdgeInsets.only(
             top: screenHeight * 0.10,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              FloatingActionButton(
-                elevation: _activePage == 0 ? 30.0 : 0.0,
-                mini: _activePage == 0 ? false : true,
-                onPressed: () {
-                  // setState(() {
-                  //   // _activePage = 0;
-                  // });
-                  displacePage(0);
-                },
-                backgroundColor: _activePage == 0 ? Colors.red[600] : Colors.lightBlue[50],
-                child: Image.asset("assets/Icons/libro_nube.png"),
-              ),
-              SizedBox(width: 20.0,),
-              FloatingActionButton(
-                heroTag: 'submenu_center',
-                elevation: _activePage == 1 ? 30.0 : 0.0,
-                mini: _activePage == 1 ? false : true,
-                onPressed: () {
-                  displacePage(1);
-                  // setState(() {
-                  //   // _activePage = 1;
-                  // });
-                },
-                backgroundColor: _activePage == 1
-                    ? Colors.yellow[600]
-                    : Colors.lightBlue[50],
-                child: Image.asset("assets/Icons/plane.png"),
-              ),
-              SizedBox(width: 20.0,),
-              FloatingActionButton(
-                heroTag: 'submenu_right',
-                elevation: _activePage == 2 ? 30.0 : 0.0,
-                mini: _activePage == 2 ? false : true,
-                onPressed: () {
-                  displacePage(2);
-                  // setState(() {
-                  //   // _activePage = 2;
-                  // });
-                },
-                backgroundColor:
-                    _activePage == 2 ? Colors.green : Colors.lightBlue[50],
-                child: Image.asset("assets/Icons/comidas.png"),
-              ),
-            ],
           ),
         ),
       );
@@ -158,29 +98,6 @@ class _HomePageState extends State<HomePage> {
       return DashboardPage();
     }
 
-    Widget _buildPageView() {
-      return Container(
-        padding: new EdgeInsets.only(
-          top: screenHeight * 0.17,
-        ),
-        child: PageView(
-          onPageChanged: (int value) {
-            print('cambie: ' + value.toString());
-            setState(() {
-              _activePage = value;
-            });
-          },
-          controller: _pageController,
-          children: [
-            _buildBlankPage(Colors.amber[50]),
-            _buildDashboardPage(),
-            _buildBlankPage(Colors.yellow[50]),
-          ],
-        ),
-        
-      );
-    }
-
     return Scaffold(
       // appBar: AppBar(
       //   title: Text('Login'),
@@ -191,7 +108,6 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             _buildCustomAppbar(),
             _buildNavIconButton(),
-            _buildPageView(),
           ],
         ),
       ),

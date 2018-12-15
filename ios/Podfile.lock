@@ -84,12 +84,20 @@ PODS:
     - FirebaseCore (~> 5.1)
     - GTMSessionFetcher/Core (~> 1.1)
   - Flutter (1.0.0)
+  - google_maps_flutter (0.0.1):
+    - Flutter
+    - GoogleMaps
   - GoogleAppMeasurement (5.3.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
     - GoogleUtilities/MethodSwizzler (~> 5.2)
     - GoogleUtilities/Network (~> 5.2)
     - "GoogleUtilities/NSData+zlib (~> 5.2)"
     - nanopb (~> 0.3)
+  - GoogleMaps (2.7.0):
+    - GoogleMaps/Maps (= 2.7.0)
+  - GoogleMaps/Base (2.7.0)
+  - GoogleMaps/Maps (2.7.0):
+    - GoogleMaps/Base
   - GoogleUtilities/AppDelegateSwizzler (5.3.6):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -146,6 +154,7 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
+  - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - quick_actions (from `.symlinks/plugins/quick_actions/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
@@ -163,6 +172,7 @@ SPEC REPOS:
     - FirebaseInstanceID
     - FirebaseStorage
     - GoogleAppMeasurement
+    - GoogleMaps
     - GoogleUtilities
     - "gRPC-C++"
     - gRPC-Core
@@ -184,6 +194,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
+  google_maps_flutter:
+    :path: ".symlinks/plugins/google_maps_flutter/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
   quick_actions:
@@ -208,7 +220,9 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: e2fa4cb35ef5558c200f7f0ad8a53e212215f93e
   FirebaseStorage: 3d22c041370593e639fba013d1eb698a8dae2881
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
+  google_maps_flutter: 6449d5918d3f1a69a37dc9c557bbad7bb9bcf0e9
   GoogleAppMeasurement: 5029d78f2b438bd30ffb44e6c558b57c21622727
+  GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
   GoogleUtilities: 95996bea7c7d9b8fb811b7507669a4a8762f80c7
   "gRPC-C++": 19eec1ffd34de29453f5fab5b4697ad0f240ad51
   gRPC-Core: f4836515817c0eb479aeeb9cc27c91c4ba62a9f6
