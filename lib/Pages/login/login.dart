@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 // import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 // import '../globals.dart' as globals;
 
@@ -21,6 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   final _codeFocusNode = FocusNode();
   var _phoneController = new TextEditingController();
   var _codeController = new TextEditingController();
+  final FirebaseMessaging _messaging = FirebaseMessaging();
 
   Future<void> verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
@@ -41,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
     };
 
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: "+591"+this.phoneNo,
+        phoneNumber: "+591" + this.phoneNo,
         codeAutoRetrievalTimeout: autoRetrieve,
         codeSent: smsCodeSent,
         timeout: const Duration(seconds: 5),
@@ -59,8 +61,6 @@ class _LoginPageState extends State<LoginPage> {
       }
     });
   }
-
-  
 
   Future<dynamic> signIn() {
     return FirebaseAuth.instance
@@ -84,38 +84,45 @@ class _LoginPageState extends State<LoginPage> {
     });
     verificar = false;
     super.initState();
+    _messaging.getToken().then((token) {
+      print(token);
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new Center(
         child: Container(
-            padding: EdgeInsets.all(25.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: 10.0),
-                _buildPhoneTextField(this.verificar),
-                SizedBox(height: 10.0),
-                verificar ? Container(child: _buildCodeTextField()) : Container(),
-                SizedBox(height: 10.0),
-                RaisedButton(
-                  onPressed: () {
+          padding: EdgeInsets.all(25.0),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <
+              Widget>[
+            SizedBox(height: 10.0),
+            _buildPhoneTextField(this.verificar),
+            SizedBox(height: 10.0),
+            verificar ? Container(child: _buildCodeTextField()) : Container(),
+            SizedBox(height: 10.0),
+            RaisedButton(
+                onPressed: () {
                   FocusScope.of(context).requestFocus(_codeFocusNode);
                   verificar ? _authCode() : verifyPhone();
                   verificar = true;
                 },
                 child: verificar ? Text('Verificar') : Text('Enviar codigo')),
-                verificar ? Container(
-                  child: RaisedButton(
-                  onPressed: () {Navigator.of(context).pushNamed('/');},
-                  child: Text('Cambiar número'))) : Container(),
-              ]
-            ),
-          ),
+            verificar
+                ? Container(
+                    child: RaisedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/');
+                        },
+                        child: Text('Cambiar número')))
+                : Container(),
+          ]),
         ),
+      ),
     );
   }
+
   Widget _buildPhoneTextField(bool verificar) {
     return TextField(
       focusNode: _phoneFocusNode,
