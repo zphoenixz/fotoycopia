@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import '../backend_links/firestoreFunctions.dart' as fireStore;
-
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../globals.dart' as globals;
 
@@ -207,7 +207,12 @@ class _LoginPageState extends State<LoginPage> {
 
     return new Scaffold(
       backgroundColor: Color.fromARGB(255, 0, 210, 185),
-      body: new Center(
+      body: Stack(children: <Widget>[new FlareActor(
+        "assets/ani.flr",
+        animation: "Untitled",
+        fit: BoxFit.none,
+      ),
+            new Center(
         child: Container(
           padding: EdgeInsets.all(25.0),
           child: Column(
@@ -270,6 +275,11 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+      
+      ],) 
+      
+      
+
     );
   }
 }

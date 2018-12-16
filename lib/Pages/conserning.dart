@@ -244,7 +244,7 @@ class _ConcerningPageState extends State<ConcerningPage>
           GestureDetector(
             onTap: () {
               FirebaseAuth.instance.signOut().then((action) {
-                Navigator.of(context).pushReplacementNamed('/');
+                Navigator.of(context).pushReplacementNamed('/login');
               }).catchError((e) {
                 print(e);
               });
