@@ -2,12 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Used to demostrate image picker</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Used to create sound</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Used to demostrate image picker</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
@@ -24,10 +18,27 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1031400094181-a5kn8ho3s2lofkpevc759c95ge5lu1aa</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Used to demostrate image picker</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Used to create sound</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to demostrate image picker</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -49,18 +60,5 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<string>YES</string>
-	<key>CFBundleURLTypes</key>
-		<array>
-			<dict>
-				<key>CFBundleTypeRole</key>
-				<string>Editor</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<!-- TODO Replace this value: -->
-					<!-- Copied from GoogleServices-Info.plist key REVERSE_CLIENT_ID -->
-					<string>com.googleusercontent.apps.1031400094181-a5kn8ho3s2lofkpevc759c95ge5lu1aa</string>
-				</array>
-			</dict>
-		</array>
 </dict>
 </plist>
