@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import './pages/login/login.dart';
 import './pages/login/signUp.dart';
-
+import './page_two.dart';
 import './pages/conserning.dart';
 import './pages/homePage.dart';
 
@@ -44,8 +44,8 @@ class _FotoyCopiaState extends State<FotoyCopia> {
         '/': (BuildContext context) => new LoginPage(), //LOGIN
         '/signup': (BuildContext context) => new SignUp(),
         '/concern': (BuildContext context) => new ConcerningPage(), //HomePage
-
         "/home": (BuildContext context) => HomePage(),
+        "/mapa": (BuildContext context) => PageTwo(),
       },
       onUnknownRoute: (RouteSettings settings) {
         //como el 404 no encontrado

@@ -134,7 +134,9 @@ class _HomePageState extends State<HomePage> {
                   shape: new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(10.0)),
                   color: Color.fromARGB(255, 117, 224, 203),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushReplacementNamed('/mapa');
+                  },
                   child: Text(
                     '        MAPA         ',
                     style: TextStyle(

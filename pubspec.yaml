@@ -22,6 +22,7 @@ dependencies:
   image_picker: 
   quick_actions: ^0.2.2
   google_maps_flutter: ^0.0.3+3
+  location: ^1.4.1
   firebase_messaging:
   
 
@@ -61,6 +62,11 @@ flutter:
 
     - assets/Icons/login/01login.png
     - assets/Icons/login/01registro.png
+    - assets/Icons/01mapa.png
+    - assets/Icons/02mapa.png
+    - assets/Icons/03mapa.png
+    - assets/Icons/04mapa.png
+    - assets/Icons/05mapa.png
     
     - assets/Icons/just_sign_up/pantalla1_1.png
     - assets/Icons/just_sign_up/pantalla1_2.png
