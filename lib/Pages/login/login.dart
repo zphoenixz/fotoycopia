@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import '../backend_links/firestoreFunctions.dart' as fireStore;
 
-// import '../globals.dart' as globals;
+import 'package:firebase_messaging/firebase_messaging.dart';
+import '../../globals.dart' as globals;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -20,9 +20,8 @@ class _LoginPageState extends State<LoginPage> {
   bool verificar;
   final _phoneFocusNode = FocusNode();
   final _codeFocusNode = FocusNode();
-  var _phoneController = new TextEditingController();
-  var _codeController = new TextEditingController();
-  final FirebaseMessaging _messaging = FirebaseMessaging();
+
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   Future<void> verifyPhone() async {
     final PhoneCodeAutoRetrievalTimeout autoRetrieve = (String verId) {
@@ -51,22 +50,43 @@ class _LoginPageState extends State<LoginPage> {
         verificationFailed: veriFailed);
   }
 
-  _authCode() {
+  _authCode() async {
     FirebaseAuth.instance.currentUser().then((user) {
-      if (user != null) {
-        Navigator.of(context).pushReplacementNamed('/home');
-        print("Ya estoy adentro");
-      } else {
-        signIn();
-      }
+      setState(() {
+        globals.userData['phone'] = "+591" + this.phoneNo;    
+      });
+
+      fireStore.checkNumber(globals.userData['phone']).then((exists) {
+        
+        if (exists) {
+          print('existe!!!!-----------------------------------------');
+          if (user != null) {
+            Navigator.of(context).pushReplacementNamed('/home');
+            print("Ya tengo cuenta 1");
+          } else {
+            print("Ya tengo cuenta 2");
+            signIn('/home');
+          }
+        } else {
+          print('no existe!!!!-----------------------------------------');
+          if (user != null) {
+            Navigator.of(context).pushReplacementNamed('/signup');
+            print("No tengo cuenta 1");
+          } else {
+            print("No tengo cuenta 2");
+            signIn('/signup');
+          }
+
+        }
+      });
     });
   }
 
-  Future<dynamic> signIn() {
+  Future<dynamic> signIn(String dir) {
     return FirebaseAuth.instance
         .signInWithPhoneNumber(verificationId: verificationId, smsCode: smsCode)
         .then((user) {
-      Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed(dir);
     }).catchError((e) {
       print(e);
       return false;
@@ -75,6 +95,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
+    super.initState();
+    firebaseCloudMessaging_Listeners();
     FirebaseAuth.instance.currentUser().then((user) {
       if (user != null) {
         Navigator.of(context).pushNamed('/home');
@@ -83,80 +105,141 @@ class _LoginPageState extends State<LoginPage> {
       print(e);
     });
     verificar = false;
-    super.initState();
-    _messaging.getToken().then((token) {
+  }
+
+  void firebaseCloudMessaging_Listeners() {
+    _firebaseMessaging.getToken().then((token) {
       print(token);
+      setState(() {
+        globals.token = token;    
+      });
+      
     });
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('on message $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('on resume $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('on launch $message');
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    Widget _buildPhoneTextField(bool verificar) {
+      return Container(
+        width: screenWidth * 0.9,
+        child: TextField(
+          focusNode: _phoneFocusNode,
+          enabled: !verificar,
+          decoration: InputDecoration(
+            labelText: 'Celular',
+            hintText: "Número de celular",
+            border: OutlineInputBorder(),
+            fillColor: Colors.white,
+            filled: true,
+          ),
+          keyboardType: TextInputType.number,
+          onChanged: (String value) {
+            phoneNo = value;
+          },
+        ),
+      );
+    }
+
+    Widget _buildCodeTextField() {
+      return Container(
+        width: screenWidth * 0.9,
+        child: TextField(
+          focusNode: _codeFocusNode,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            labelText: 'Código SMS',
+            hintText: "Ingrese su código",
+            border: OutlineInputBorder(),
+            fillColor: Colors.white,
+            filled: true,
+          ),
+          onChanged: (String value) {
+            smsCode = value;
+          },
+        ),
+      );
+    }
+
     return new Scaffold(
+      backgroundColor: Color.fromARGB(255, 0, 210, 185),
       body: new Center(
         child: Container(
           padding: EdgeInsets.all(25.0),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <
-              Widget>[
-            SizedBox(height: 10.0),
-            _buildPhoneTextField(this.verificar),
-            SizedBox(height: 10.0),
-            verificar ? Container(child: _buildCodeTextField()) : Container(),
-            SizedBox(height: 10.0),
-            RaisedButton(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                'assets/Icons/login/01login.png',
+                width: screenWidth * 0.9,
+              ),
+              SizedBox(height: screenHeight * 0.07),
+              _buildPhoneTextField(this.verificar),
+              SizedBox(height: 10.0),
+              verificar ? Container(child: _buildCodeTextField()) : Container(),
+              SizedBox(height: 10.0),
+              RaisedButton(
+                shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(10.0)),
+                color: Color.fromARGB(255, 217, 55, 79),
                 onPressed: () {
-                  FocusScope.of(context).requestFocus(_codeFocusNode);
+                  // FocusScope.of(context).requestFocus(_codeFocusNode);
                   verificar ? _authCode() : verifyPhone();
                   verificar = true;
                 },
-                child: verificar ? Text('Verificar') : Text('Enviar codigo')),
-            verificar
-                ? Container(
-                    child: RaisedButton(
-                        onPressed: () {
+                child: verificar
+                    ? Text(
+                        'VERIFICAR',
+                        style: TextStyle(
+                          color: Colors.white,
+                          // fontWeight: FontWeight.bold,
+                          fontSize: 20.0,
+                        ),
+                      )
+                    : Text(
+                        'INGRESAR',
+                        style: TextStyle(
+                          color: Colors.white,
+                          // fontWeight: FontWeight.bold,
+                          fontSize: 20.0,
+                        ),
+                      ),
+              ),
+              verificar
+                  ? Container(
+                      child: GestureDetector(
+                        onTap: () {
                           Navigator.of(context).pushNamed('/');
                         },
-                        child: Text('Cambiar número')))
-                : Container(),
-          ]),
+                        child: Text(
+                          'mejor otro número...',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 217, 55, 79),
+                              // fontWeight: FontWeight.bold,
+                              fontSize: 17.0,
+                              decoration: TextDecoration.underline),
+                        ),
+                      ),
+                    )
+                  : Container(),
+            ],
+          ),
         ),
       ),
-    );
-  }
-
-  Widget _buildPhoneTextField(bool verificar) {
-    return TextField(
-      focusNode: _phoneFocusNode,
-      enabled: !verificar,
-      controller: _phoneController,
-      decoration: InputDecoration(
-        labelText: 'Celular',
-        hintText: "Número de celular",
-        border: OutlineInputBorder(),
-        fillColor: Colors.white54,
-        filled: true,
-      ),
-      keyboardType: TextInputType.number,
-      onChanged: (String value) {
-        phoneNo = value;
-      },
-    );
-  }
-
-  Widget _buildCodeTextField() {
-    return TextField(
-      focusNode: _codeFocusNode,
-      controller: _codeController,
-      keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        labelText: 'Código SMS',
-        hintText: "Ingrese su código",
-        border: OutlineInputBorder(),
-        fillColor: Colors.white54,
-        filled: true,
-      ),
-      onChanged: (String value) {
-        smsCode = value;
-      },
     );
   }
 }

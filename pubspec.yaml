@@ -23,6 +23,7 @@ dependencies:
   quick_actions: ^0.2.2
   google_maps_flutter: ^0.0.3+3
   firebase_messaging:
+  
 
   http: 
   url_launcher:
@@ -35,6 +36,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons:
+
+flutter_icons:
+  android: "launcher_icon" 
+  ios: true
+  image_path: "assets/iconoApp.png"
 
 
 # For information on the generic Dart part of this file, see the
@@ -50,22 +57,24 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/Icons/plane.png
-    - assets/Icons/lunch.png
-    - assets/Icons/burger.png
-    - assets/Icons/comidas.png
     - assets/Icons/male_user.png
-    - assets/Icons/libro_nube.png
 
-    - assets/Icons/file_icons/excel.png
-    - assets/Icons/file_icons/img.png
-    - assets/Icons/file_icons/pdf.png
-    - assets/Icons/file_icons/powerpoint.png
-    - assets/Icons/file_icons/word.png
-    - assets/Icons/file_icons/unknow.png
+    - assets/Icons/login/01login.png
+    - assets/Icons/login/01registro.png
+    
+    - assets/Icons/just_sign_up/pantalla1_1.png
+    - assets/Icons/just_sign_up/pantalla1_2.png
 
-    - assets/Icons/app_bar_icons/zoom_in.png
-    - assets/Icons/app_bar_icons/zoom_out.png
+    - assets/Icons/just_sign_up/pantalla2_1.png
+    - assets/Icons/just_sign_up/pantalla2_2.png
+    - assets/Icons/just_sign_up/pantalla2_3.png
+
+    - assets/Icons/just_sign_up/pantalla3_1.png
+
+    - assets/Icons/home/01inicio.png
+    - assets/Icons/home/02inicio.png
+    - assets/Icons/home/03inicio.png
+    - assets/Icons/home/botonApretado.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

@@ -15,8 +15,9 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="fotoycopia"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Alerta"
+        android:icon="@mipmap/launcher_icon">
+        
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAIWg4GVmBKtPreH8QfSsODl10WSIhf_gU" />
@@ -38,6 +39,17 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
+        <service
+            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+            android:exported="true" >
+            <intent-filter android:priority="-500" >
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 </manifest>

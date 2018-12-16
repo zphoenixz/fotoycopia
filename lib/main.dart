@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import './pages/login/login.dart';
-import './page_two.dart';
+import './pages/login/signUp.dart';
 
+import './pages/conserning.dart';
 import './pages/homePage.dart';
 
 void main() {
@@ -17,7 +18,6 @@ class FotoyCopia extends StatefulWidget {
 }
 
 class _FotoyCopiaState extends State<FotoyCopia> {
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -25,11 +25,15 @@ class _FotoyCopiaState extends State<FotoyCopia> {
       DeviceOrientation.portraitDown,
     ]);
 
+    Color hexToColor(String code) {
+      return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    }
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // brightness: Brightness.light,
-        canvasColor: Colors.yellow[50],
+        // canvasColor: Colors.yellow[50],
         // primarySwatch: Colors.green,
         // accentColor: Colors.blue[50],
         // buttonColor: Colors.redAccent[100],
@@ -38,9 +42,10 @@ class _FotoyCopiaState extends State<FotoyCopia> {
       //home: AuthPage(),// "/" esta reservada para la home page
       routes: {
         '/': (BuildContext context) => new LoginPage(), //LOGIN
-        // '/prueba': (BuildContext context) => new DashboardPage(),
-        '/home': (BuildContext context) => new HomePage(), //HomePage
-        "/PageTwo": (BuildContext context) => PageTwo(),
+        '/signup': (BuildContext context) => new SignUp(),
+        '/concern': (BuildContext context) => new ConcerningPage(), //HomePage
+
+        "/home": (BuildContext context) => HomePage(),
       },
       onUnknownRoute: (RouteSettings settings) {
         //como el 404 no encontrado
