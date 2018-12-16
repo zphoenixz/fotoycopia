@@ -23,6 +23,7 @@ dependencies:
   quick_actions: ^0.2.2
   google_maps_flutter: ^0.0.3+3
   firebase_messaging:
+  flare_flutter: ^1.0.4
   
 
   http: 
@@ -75,7 +76,7 @@ flutter:
     - assets/Icons/home/02inicio.png
     - assets/Icons/home/03inicio.png
     - assets/Icons/home/botonApretado.png
-
+    - assets/ani.flr
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
 

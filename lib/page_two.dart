@@ -1,53 +1,26 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class PageTwo extends StatefulWidget {
+class IntroPage extends StatefulWidget {
   @override
-  _PageTwoState createState() => _PageTwoState();
+  _IntroPageState createState() => new _IntroPageState();
 }
 
-class _PageTwoState extends State<PageTwo> {
-  GoogleMapController mapController;
-
+class _IntroPageState extends State<IntroPage> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(15.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Center(
-            child: SizedBox(
-              width: 300.0,
-              height: 200.0,
-              child: GoogleMap(
-                onMapCreated: _onMapCreated,
-              ),
-            ),
-          ),
-          RaisedButton(
-            child: const Text('Go to London'),
-            onPressed: mapController == null
-                ? null
-                : () {
-                    mapController.animateCamera(CameraUpdate.newCameraPosition(
-                      const CameraPosition(
-                        bearing: 270.0,
-                        target: LatLng(51.5160895, -0.1294527),
-                        tilt: 30.0,
-                        zoom: 17.0,
-                      ),
-                    ));
-                  },
-          ),
-        ],
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).pushReplacementNamed('/');
+        },
+        child: new FlareActor(
+          "assets/ani.flr",
+          alignment: Alignment.center,
+          animation: "Untitled",
+          fit: BoxFit.contain,
+        ),
       ),
     );
-  }
-
-  void _onMapCreated(GoogleMapController controller) {
-    setState(() {
-      mapController = controller;
-    });
   }
 }

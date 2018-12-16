@@ -34,7 +34,35 @@ class _LoginPageState extends State<LoginPage> {
 
     final PhoneVerificationCompleted verifiedSuccess = (FirebaseUser user) {
       print('verified');
-      Navigator.of(context).pushReplacementNamed('/home');
+            setState(() {
+        globals.userData['phone'] = "+591" + this.phoneNo;    
+      });
+
+      fireStore.checkNumber(globals.userData['phone']).then((exists) {
+        
+        if (exists) {
+          print('existe!!!!-----------------------------------------');
+          if (user != null) {
+            Navigator.of(context).pushReplacementNamed('/home');
+            print("Ya tengo cuenta 1");
+          } else {
+            print("Ya tengo cuenta 2");
+            signIn('/home');
+          }
+        } else {
+          print('no existe!!!!-----------------------------------------');
+          if (user != null) {
+            Navigator.of(context).pushReplacementNamed('/signup');
+            print("No tengo cuenta 1");
+          } else {
+            print("No tengo cuenta 2");
+            signIn('/signup');
+          }
+
+        }
+      });
+
+      // Navigator.of(context).pushReplacementNamed('/home');
     };
 
     final PhoneVerificationFailed veriFailed = (AuthException exception) {
@@ -128,6 +156,8 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
